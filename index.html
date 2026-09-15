@@ -1,0 +1,366 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tes Kemampuan Inteligensi - Loka Rehabilitasi Batam</title>
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            min-height: 100vh;
+            padding: 20px;
+            margin: 0;
+        }
+
+        .wrap {
+            max-width: 700px;
+            width: 100%;
+        }
+
+        .kartu {
+            background-color: #fff;
+            padding: 24px 28px;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            margin-bottom: 20px;
+        }
+
+        /* Kop / judul halaman */
+        .header {
+            text-align: center;
+            border-top: 5px solid #3498db;
+        }
+
+        .header h1 {
+            margin: 0 0 6px 0;
+            font-size: 26px;
+            color: #2c3e50;
+        }
+
+        .header p {
+            margin: 0;
+            color: #666;
+            font-size: 16px;
+        }
+
+        /* Kotak disclaimer */
+        .disclaimer {
+            background-color: #fdecea;
+            border: 1px solid #f5b7b1;
+            color: #922b21;
+        }
+
+        .disclaimer .badge {
+            display: inline-block;
+            background-color: #e74c3c;
+            color: #fff;
+            font-weight: bold;
+            font-size: 13px;
+            padding: 3px 10px;
+            border-radius: 12px;
+            margin-bottom: 8px;
+        }
+
+        .disclaimer p {
+            margin: 0;
+            font-size: 15px;
+            line-height: 1.5;
+        }
+
+        /* Bagian instruksi mengerjakan */
+        .kartu h2 {
+            margin: 0 0 12px 0;
+            font-size: 18px;
+            color: #333;
+        }
+
+        .daftar-instruksi {
+            margin: 0;
+            padding-left: 22px;
+            color: #444;
+            font-size: 15px;
+            line-height: 1.7;
+        }
+
+        /* ============ FORM IDENTITAS PESERTA ============ */
+        .baris-form {
+            margin-bottom: 14px;
+        }
+
+        .baris-form label {
+            display: block;
+            font-weight: bold;
+            font-size: 14px;
+            color: #333;
+            margin-bottom: 5px;
+        }
+
+        .baris-form input,
+        .baris-form select {
+            width: 100%;
+            padding: 10px 12px;
+            font-size: 15px;
+            font-family: Arial, sans-serif;
+            border: 1px solid #ccd1d9;
+            border-radius: 6px;
+            background-color: #fff;
+            color: #333;
+        }
+
+        .baris-form input:focus,
+        .baris-form select:focus {
+            outline: none;
+            border-color: #3498db;
+            box-shadow: 0 0 4px rgba(52,152,219,0.4);
+        }
+
+        /* Isian otomatis dibedakan agar jelas tidak perlu diisi */
+        .baris-form input[readonly] {
+            background-color: #f4f6f7;
+            color: #555;
+        }
+
+        .petunjuk-otomatis {
+            font-size: 12px;
+            color: #888;
+            margin-top: 4px;
+        }
+
+        .pesan-error {
+            display: none;
+            background-color: #fdecea;
+            border: 1px solid #f5b7b1;
+            color: #922b21;
+            font-size: 14px;
+            padding: 10px 14px;
+            border-radius: 6px;
+            margin-bottom: 14px;
+        }
+
+        /* Tombol selanjutnya */
+        .tombol-wrap {
+            text-align: center;
+            margin-top: 25px;
+        }
+
+        .tombol {
+            display: inline-block;
+            padding: 12px 48px;
+            font-size: 17px;
+            font-weight: bold;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            color: #fff;
+            text-decoration: none;
+        }
+
+        .tombol-utama { background-color: #3498db; }
+        .tombol-utama:hover { background-color: #2980b9; }
+
+        @media (max-width: 768px) {
+            .header h1 { font-size: 22px; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="wrap">
+
+        <!-- JUDUL -->
+        <div class="kartu header">
+            <h1>Tes Kemampuan Inteligensi</h1>
+            <p>Loka Rehabilitasi Batam</p>
+        </div>
+
+        <!-- DISCLAIMER -->
+        <div class="kartu disclaimer">
+            <span class="badge">DISCLAIMER</span>
+            <p>Hanya digunakan dalam lingkungan Loka Rehabilitasi BNN Batam.</p>
+        </div>
+
+        <!-- INSTRUKSI MENGERJAKAN -->
+        <div class="kartu">
+            <h2>Instruksi Mengerjakan</h2>
+            <ol class="daftar-instruksi">
+                <li>Anda akan mengerjakan 4 jenis tes yang masing-masing instruksinya berbeda-beda.</li>
+                <li>Bacalah dengan sebaik-baiknya masing-masing instruksi tes tersebut.</li>
+                <li>Masing-masing tes ada waktunya masing-masing.</li>
+            </ol>
+        </div>
+
+        <!-- IDENTITAS PESERTA -->
+        <div class="kartu">
+            <h2>Identitas Peserta</h2>
+
+            <div class="pesan-error" id="pesanError"></div>
+
+            <form id="formIdentitas" novalidate>
+
+                <div class="baris-form">
+                    <label for="inpNomor">Nomor</label>
+                    <input type="text" id="inpNomor" readonly>
+                    <div class="petunjuk-otomatis">Nomor peserta dibuat otomatis (boleh diubah sebelum mulai).</div>
+                </div>
+
+                <div class="baris-form">
+                    <label for="inpNama">Nama</label>
+                    <input type="text" id="inpNama" placeholder="Nama lengkap peserta" autocomplete="off">
+                </div>
+
+                <div class="baris-form">
+                    <label for="inpTglLahir">Tanggal Lahir</label>
+                    <input type="date" id="inpTglLahir">
+                </div>
+
+                <div class="baris-form">
+                    <label for="inpTglTes">Tanggal Tes</label>
+                    <input type="text" id="inpTglTes" readonly>
+                    <div class="petunjuk-otomatis">Diisi otomatis dengan tanggal pengerjaan tes.</div>
+                </div>
+
+                <div class="baris-form">
+                    <label for="inpUsia">Usia</label>
+                    <input type="text" id="inpUsia" readonly placeholder="-">
+                    <div class="petunjuk-otomatis">Dihitung otomatis: tanggal tes dikurangi tanggal lahir.</div>
+                </div>
+
+                <div class="baris-form">
+                    <label for="inpPendidikan">Sekolah / Pendidikan</label>
+                    <select id="inpPendidikan">
+                        <option value="">- pilih jenjang -</option>
+                        <option value="SD">SD</option>
+                        <option value="SMP">SMP</option>
+                        <option value="SMA">SMA</option>
+                        <option value="SMK">SMK</option>
+                        <option value="Perguruan Tinggi">Perguruan Tinggi</option>
+                        <option value="Lainnya">Lainnya</option>
+                    </select>
+                </div>
+
+                <div class="tombol-wrap">
+                    <button type="submit" class="tombol tombol-utama">Selanjutnya</button>
+                </div>
+
+            </form>
+        </div>
+
+    </div>
+
+    <script>
+        const inpNomor       = document.getElementById("inpNomor");
+        const inpNama        = document.getElementById("inpNama");
+        const inpTglLahir    = document.getElementById("inpTglLahir");
+        const inpTglTes      = document.getElementById("inpTglTes");
+        const inpUsia        = document.getElementById("inpUsia");
+        const inpPendidikan  = document.getElementById("inpPendidikan");
+        const pesanError     = document.getElementById("pesanError");
+        const formIdentitas  = document.getElementById("formIdentitas");
+
+        // ------------------------------------------------------------
+        // Tanggal dalam format "15 Sep 2026"
+        // ------------------------------------------------------------
+        const NAMA_BULAN = ["Jan","Feb","Mar","Apr","Mei","Jun","Jul","Agu","Sep","Okt","Nov","Des"];
+
+        function formatTanggal(tgl) {
+            return tgl.getDate() + " " + NAMA_BULAN[tgl.getMonth()] + " " + tgl.getFullYear();
+        }
+
+        // yyyy-mm-dd (dari input date) -> objek Date tanpa masalah zona waktu
+        function parseTanggalInput(nilai) {
+            const bagian = nilai.split("-");
+            return new Date(parseInt(bagian[0], 10), parseInt(bagian[1], 10) - 1, parseInt(bagian[2], 10));
+        }
+
+        // ------------------------------------------------------------
+        // Nomor peserta otomatis (8 digit, masih bisa dilihat/diedit)
+        // ------------------------------------------------------------
+        inpNomor.value = String(Date.now() % 100000000).padStart(8, "0");
+
+        // ------------------------------------------------------------
+        // Tanggal tes otomatis = hari ini (saat tes dikerjakan)
+        // ------------------------------------------------------------
+        const hariIni = new Date();
+        inpTglTes.value = formatTanggal(hariIni);
+
+        // ------------------------------------------------------------
+        // Usia otomatis = tanggal tes dikurangi tanggal lahir,
+        // ditampilkan "20.3 tahun" (20 tahun 3 bulan).
+        // ------------------------------------------------------------
+        function hitungUsia() {
+            inpUsia.value = "-";
+            if (!inpTglLahir.value) return;
+
+            const lahir = parseTanggalInput(inpTglLahir.value);
+            const tes   = hariIni;
+
+            let tahun = tes.getFullYear()  - lahir.getFullYear();
+            let bulan = tes.getMonth()     - lahir.getMonth();
+            if (tes.getDate() < lahir.getDate()) bulan--;
+
+            if (bulan < 0) {
+                tahun--;
+                bulan += 12;
+            }
+
+            if (tahun < 0) {
+                inpUsia.value = "tanggal lahir tidak valid";
+                return;
+            }
+
+            inpUsia.value = tahun + "." + bulan + " tahun";
+        }
+
+        inpTglLahir.addEventListener("change", hitungUsia);
+        inpTglLahir.addEventListener("input", hitungUsia);
+
+        // ------------------------------------------------------------
+        // Validasi lalu simpan identitas sebelum masuk ke tes pertama
+        // ------------------------------------------------------------
+        formIdentitas.addEventListener("submit", function (e) {
+            e.preventDefault();
+
+            const nama       = inpNama.value.trim();
+            const tglLahir   = inpTglLahir.value;
+            const pendidikan = inpPendidikan.value;
+
+            let kesalahan = [];
+            if (!nama)       kesalahan.push("Nama harus diisi.");
+            if (!tglLahir)   kesalahan.push("Tanggal lahir harus diisi.");
+            if (!pendidikan) kesalahan.push("Sekolah / pendidikan harus dipilih.");
+            if (inpUsia.value.indexOf("tidak valid") !== -1) kesalahan.push("Tanggal lahir tidak valid.");
+
+            if (kesalahan.length > 0) {
+                pesanError.style.display = "block";
+                pesanError.textContent = kesalahan.join(" ");
+                return;
+            }
+
+            pesanError.style.display = "none";
+
+            // Disimpan agar tampil otomatis pada halaman hasil akhir
+            const identitas = {
+                nomor:       inpNomor.value.trim(),
+                nama:        nama,
+                tglLahir:    tglLahir,
+                tglTes:      hariIni.getFullYear() + "-" +
+                             String(hariIni.getMonth() + 1).padStart(2, "0") + "-" +
+                             String(hariIni.getDate()).padStart(2, "0"),
+                pendidikan:  pendidikan
+            };
+            localStorage.setItem("cfit_peserta", JSON.stringify(identitas));
+
+            window.location.href = "cfit-1.html";
+        });
+    </script>
+
+</body>
+</html>

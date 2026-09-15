@@ -1,0 +1,392 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Profil Tes Kemampuan Inteligensi</title>
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #fff;
+            color: #111;
+            display: flex;
+            justify-content: center;
+            padding: 30px 20px;
+            margin: 0;
+        }
+
+        .wrap {
+            max-width: 760px;
+            width: 100%;
+        }
+
+        h1 {
+            font-size: 24px;
+            margin: 0 0 20px 0;
+            letter-spacing: 0.3px;
+        }
+
+        h2 {
+            font-size: 15px;
+            margin: 18px 0 10px 0;
+        }
+
+        /* ===== Identitas ===== */
+        .daftar-identitas {
+            margin: 0;
+            padding-left: 22px;
+            font-size: 15px;
+            line-height: 1.9;
+        }
+
+        .daftar-identitas b {
+            font-weight: bold;
+        }
+
+        /* ===== Tabel hasil sub test ===== */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 5px;
+        }
+
+        th {
+            background-color: #efefef;
+            font-size: 13px;
+            letter-spacing: 0.5px;
+            text-align: left;
+            padding: 12px 14px;
+            border-bottom: 1px solid #ddd;
+        }
+
+        th.angka {
+            text-align: center;
+            width: 140px;
+        }
+
+        td {
+            font-size: 14px;
+            padding: 16px 14px;
+            border-bottom: 1px solid #e5e5e5;
+            letter-spacing: 0.4px;
+        }
+
+        td.angka {
+            text-align: center;
+        }
+
+        /* ===== Skor total ===== */
+        .daftar-total {
+            margin: 10px 0 0 0;
+            padding-left: 22px;
+            font-size: 15px;
+            line-height: 1.9;
+        }
+
+        /* ===== Kesimpulan ===== */
+        .garis-pisah {
+            border: none;
+            border-top: 1px solid #ccc;
+            margin: 30px 0 20px 0;
+        }
+
+        .kesimpulan p {
+            font-size: 15px;
+            line-height: 1.7;
+            margin: 0 0 12px 0;
+        }
+
+        /* Peringatan data tidak lengkap */
+        .peringatan {
+            background-color: #fff8e1;
+            border: 1px solid #ffe082;
+            color: #7a5c00;
+            font-size: 14px;
+            line-height: 1.5;
+            padding: 12px 16px;
+            border-radius: 6px;
+            margin: 15px 0;
+            display: none;
+        }
+
+        .tombol-wrap {
+            text-align: center;
+            margin-top: 30px;
+        }
+
+        .tombol {
+            display: inline-block;
+            padding: 12px 48px;
+            font-size: 16px;
+            font-weight: bold;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            color: #fff;
+            text-decoration: none;
+        }
+
+        .tombol-utama { background-color: #3498db; }
+        .tombol-utama:hover { background-color: #2980b9; }
+
+        .tombol-pdf { background-color: #27ae60; }
+        .tombol-pdf:hover { background-color: #219150; }
+
+        @media (max-width: 768px) {
+            h1 { font-size: 20px; }
+            th.angka { width: 90px; }
+        }
+
+        /* ============ GAYA SAAT DICETAK / DISIMPAN PDF ============ */
+        @media print {
+            body {
+                padding: 0;
+            }
+            .tombol-wrap {
+                display: none; /* Tombol tidak ikut tercetak */
+            }
+            .wrap {
+                max-width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="wrap">
+
+        <h1>PROFIL TES KEMAMPUAN INTELEGENSI</h1>
+
+        <!-- ================= IDENTITAS ================= -->
+        <h2>Identitas</h2>
+        <ul class="daftar-identitas">
+            <li>Nomor: <b id="idNomor">-</b></li>
+            <li>Nama: <b id="idNama">-</b></li>
+            <li>Tgl. Lahir: <b id="idTglLahir">-</b></li>
+            <li>Pendidikan: <b id="idPendidikan">-</b></li>
+            <li>Tgl. Pemeriksaan: <b id="idTglTes">-</b></li>
+        </ul>
+
+        <!-- ================= HASIL SUB TEST ================= -->
+        <h2>Hasil Sub Test</h2>
+        <table>
+            <tr>
+                <th>SUB TEST</th>
+                <th class="angka">RAW</th>
+            </tr>
+            <tr>
+                <td>1. SERIES</td>
+                <td class="angka" id="rawA">-</td>
+            </tr>
+            <tr>
+                <td>2. CLASSIFICATION</td>
+                <td class="angka" id="rawB">-</td>
+            </tr>
+            <tr>
+                <td>3. MATRICES</td>
+                <td class="angka" id="rawC">-</td>
+            </tr>
+            <tr>
+                <td>4. CONDITIONS/TOPOLOGY</td>
+                <td class="angka" id="rawD">-</td>
+            </tr>
+        </table>
+
+        <div class="peringatan" id="peringatanKurang">
+            Ada sub tes yang belum tercatat (kemungkinan halaman ini dibuka langsung
+            tanpa mengerjakan seluruh seri). Hasil di bawah mungkin belum lengkap.
+        </div>
+
+        <!-- ================= SKOR TOTAL ================= -->
+        <h2>Skor Total</h2>
+        <ul class="daftar-total">
+            <li>JUMLAH TOTAL: <b id="totalJumlah">-</b></li>
+            <li>DEVIASI IQ: <b id="totalIQ">-</b></li>
+            <li>Taraf Kecerdasan: <b id="totalTaraf">-</b></li>
+        </ul>
+
+        <hr class="garis-pisah">
+
+        <!-- ================= KESIMPULAN SINGKAT ================= -->
+        <h1>KESIMPULAN SINGKAT TES KEMAMPUAN INTELEGENSI</h1>
+        <div class="kesimpulan">
+            <p id="simpulParagraf">-</p>
+        </div>
+
+        <div class="tombol-wrap">
+            <button type="button" class="tombol tombol-pdf" id="btnPdf">Simpan PDF</button>
+            <button type="button" class="tombol tombol-utama" id="btnSelesai">Selesai</button>
+        </div>
+
+    </div>
+
+    <script>
+        // ============================================================
+        // 1. BACA IDENTITAS PESERTA (disimpan di index.html)
+        // ============================================================
+        const DAFTAR_SERI = [
+            { kunci: "cfit_seriA_skor", elemen: "rawA", nama: "Series" },
+            { kunci: "cfit_seriB_skor", elemen: "rawB", nama: "Classification" },
+            { kunci: "cfit_seriC_skor", elemen: "rawC", nama: "Matrices" },
+            { kunci: "cfit_seriD_skor", elemen: "rawD", nama: "Conditions/Topology" }
+        ];
+
+        // Deskripsi kekuatan tiap aspek untuk kalimat kesimpulan
+        const DESKRIPSI_ASPEK = {
+            "Series":               "kemampuan cukup baik dalam menalar pola dan hubungan yang berurutan",
+            "Classification":       "kemampuan cukup baik dalam melihat persamaan dan perbedaan",
+            "Matrices":             "kemampuan cukup baik dalam menangkap pola visual-abstrak",
+            "Conditions/Topology":  "kemampuan cukup baik dalam memahami hubungan dan kondisi antar bentuk"
+        };
+
+        const NAMA_BULAN = ["Jan","Feb","Mar","Apr","Mei","Jun","Jul","Agu","Sep","Okt","Nov","Des"];
+
+        function formatTanggal(nilaiIso) {
+            const bagian = nilaiIso.split("-");
+            return parseInt(bagian[2], 10) + " " + NAMA_BULAN[parseInt(bagian[1], 10) - 1] + " " + bagian[0];
+        }
+
+        // Usia saat pemeriksaan, format "20.3 tahun" (20 tahun 3 bulan)
+        function hitungUsia(tglLahirIso, tglTesIso) {
+            const l = tglLahirIso.split("-");
+            const t = tglTesIso.split("-");
+            const lahir = new Date(parseInt(l[0], 10), parseInt(l[1], 10) - 1, parseInt(l[2], 10));
+            const tes   = new Date(parseInt(t[0], 10), parseInt(t[1], 10) - 1, parseInt(t[2], 10));
+
+            let tahun = tes.getFullYear() - lahir.getFullYear();
+            let bulan = tes.getMonth()    - lahir.getMonth();
+            if (tes.getDate() < lahir.getDate()) bulan--;
+
+            if (bulan < 0) {
+                tahun--;
+                bulan += 12;
+            }
+
+            if (tahun < 0) return null;
+            return tahun + "." + bulan;
+        }
+
+        let peserta = null;
+        try {
+            const isi = localStorage.getItem("cfit_peserta");
+            if (isi) peserta = JSON.parse(isi);
+        } catch (e) {
+            peserta = null;
+        }
+
+        if (peserta) {
+            document.getElementById("idNomor").textContent      = peserta.nomor || "-";
+            document.getElementById("idNama").textContent       = peserta.nama || "-";
+            document.getElementById("idPendidikan").textContent = peserta.pendidikan || "-";
+            if (peserta.tglTes)   document.getElementById("idTglTes").textContent = formatTanggal(peserta.tglTes);
+            if (peserta.tglLahir) {
+                const usia = hitungUsia(peserta.tglLahir, peserta.tglTes || peserta.tglLahir);
+                const tampil = formatTanggal(peserta.tglLahir) + (usia ? " (" + usia + " tahun)" : "");
+                document.getElementById("idTglLahir").textContent = tampil;
+            }
+        }
+
+        // ============================================================
+        // 2. BACA SKOR PER SERI + HITUNG TOTAL
+        // ============================================================
+        let total = 0;
+        let lengkap = true;
+        let nilaiSeri = [];
+
+        DAFTAR_SERI.forEach(function (seri) {
+            const isi   = localStorage.getItem(seri.kunci);
+            const angka = parseInt(isi, 10);
+
+            if (isi === null || isNaN(angka)) {
+                lengkap = false;
+                nilaiSeri.push({ nama: seri.nama, nilai: 0 });
+                document.getElementById(seri.elemen).textContent = "0";
+            } else {
+                nilaiSeri.push({ nama: seri.nama, nilai: angka });
+                total += angka;
+                document.getElementById(seri.elemen).textContent = String(angka);
+            }
+        });
+
+        document.getElementById("totalJumlah").textContent = String(total);
+
+        if (!lengkap) {
+            document.getElementById("peringatanKurang").style.display = "block";
+        }
+
+        // ============================================================
+        // 3. KONVERSI KE DEVIASI IQ + TARAF KECERDASAN
+        //
+        // PERKIRAAN SEDERHANA (garis lurus 0 -> 56 s.d. 47 -> 146),
+        // sehingga total 21 menghasilkan IQ 96 seperti contoh laporan.
+        // GANTI dengan tabel norma resmi (berbeda menurut kelompok
+        // usia) bila sudah tersedia!
+        // ============================================================
+        const IQ_MIN = 56, IQ_MAX = 146, SOAL_TOTAL = 47;
+        const deviasiIQ = Math.round(IQ_MIN + (total / SOAL_TOTAL) * (IQ_MAX - IQ_MIN));
+
+        let taraf;
+        if      (deviasiIQ >= 130) taraf = "Sangat Superior";
+        else if (deviasiIQ >= 120) taraf = "Superior";
+        else if (deviasiIQ >= 110) taraf = "Di atas rata-rata";
+        else if (deviasiIQ >=  90) taraf = "Rata-rata";
+        else if (deviasiIQ >=  80) taraf = "Rata-rata bawah";
+        else if (deviasiIQ >=  70) taraf = "Di bawah rata-rata";
+        else                       taraf = "Jauh di bawah rata-rata";
+
+        let rentang;
+        if      (taraf === "Rata-rata")          rentang = "normal";
+        else if (taraf === "Di atas rata-rata")  rentang = "di atas normal";
+        else if (taraf === "Superior")           rentang = "superior";
+        else if (taraf === "Sangat Superior")    rentang = "sangat superior";
+        else                                     rentang = "di bawah normal";
+
+        document.getElementById("totalIQ").textContent    = String(deviasiIQ);
+        document.getElementById("totalTaraf").textContent = taraf;
+
+        // ============================================================
+        // 4. KESIMPULAN SINGKAT
+        // ============================================================
+        const tertinggi = nilaiSeri.reduce(function (a, b) {
+            return (b.nilai > a.nilai) ? b : a;
+        }, nilaiSeri[0]);
+
+        const namaPeserta   = (peserta && peserta.nama)      ? peserta.nama      : "Peserta";
+        const pendidikanTxt = (peserta && peserta.pendidikan) ? peserta.pendidikan : "-";
+
+        const paragraf =
+            namaPeserta + " memiliki taraf kecerdasan <b>" + taraf +
+            "</b> dengan IQ <b>" + deviasiIQ + "</b>." +
+            "<br>Kemampuan berpikir abstrak, penalaran logis, dan pemecahan masalah " +
+            "berada pada rentang " + rentang + " sesuai usia dan pendidikan " + pendidikanTxt + "." +
+            "<br>Skor tertinggi ada pada aspek <b>" + tertinggi.nama + " " + tertinggi.nilai +
+            "</b>, menunjukkan " + (DESKRIPSI_ASPEK[tertinggi.nama] || "kemampuan yang relatif baik pada aspek tersebut") + ".";
+
+        document.getElementById("simpulParagraf").innerHTML = paragraf;
+
+        // ============================================================
+        // SIMPAN PDF: langsung membuka dialog cetak otomatis.
+        // Pada dialog, pilih "Save as PDF" / "Simpan sebagai PDF".
+        // ============================================================
+        document.getElementById("btnPdf").addEventListener("click", function () {
+            window.print();
+        });
+
+        // ============================================================
+        // 5. SELESAI: hapus semua data sementara, kembali ke awal
+        // ============================================================
+        document.getElementById("btnSelesai").addEventListener("click", function () {
+            localStorage.removeItem("cfit_peserta");
+            DAFTAR_SERI.forEach(function (seri) {
+                localStorage.removeItem(seri.kunci);
+            });
+            window.location.href = "index.html";
+        });
+    </script>
+
+</body>
+</html>

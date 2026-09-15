@@ -1,0 +1,643 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Psikotes CFIT - Subtes Seri B (Soal 1-14)</title>
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            display: flex;
+            justify-content: center;
+            padding: 20px;
+            margin: 0;
+        }
+
+        .wrap {
+            max-width: 1000px;
+            width: 100%;
+        }
+
+        .header {
+            background-color: #fff;
+            padding: 16px 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            margin-bottom: 20px;
+        }
+
+        .header h1 {
+            margin: 0 0 5px 0;
+            font-size: 22px;
+            color: #333;
+        }
+
+        .header p {
+            margin: 0;
+            color: #666;
+            font-size: 14px;
+        }
+
+        .sesi {
+            display: flex;
+            flex-direction: row;
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            gap: 30px;
+            margin-bottom: 20px;
+        }
+
+        .kolom-kiri {
+            flex: 1;
+            display: flex;
+            align-items: flex-start;
+        }
+
+        .kolom-kiri img {
+            width: 100%;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+
+        .kolom-kanan {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            justify-content: center;
+        }
+
+        .info-contoh {
+            background-color: #fff8e1;
+            border: 1px solid #ffe082;
+            border-radius: 6px;
+            padding: 14px 16px;
+            color: #7a5c00;
+            font-size: 15px;
+            line-height: 1.5;
+        }
+
+        .info-contoh .badge {
+            display: inline-block;
+            background-color: #f0a500;
+            color: #fff;
+            font-weight: bold;
+            font-size: 13px;
+            padding: 3px 10px;
+            border-radius: 12px;
+            margin-bottom: 8px;
+        }
+
+        .grup-jawaban {
+            display: flex;
+            flex-direction: column;
+            padding: 15px 12px;
+            border-radius: 6px;
+            border: 2px solid transparent;
+            background-color: #fafafa;
+            transition: all 0.3s;
+        }
+
+        /* Penanda hasil koreksi langsung (contoh) */
+        .grup-jawaban.benar  { border-color: #2ecc71; background-color: #eafaf1; }
+        .grup-jawaban.salah  { border-color: #e74c3c; background-color: #fdedec; }
+        .grup-jawaban.kosong { border-color: #bdc3c7; background-color: #f4f6f7; }
+
+        .judul-soal {
+            font-weight: bold;
+            margin-bottom: 12px;
+            color: #333;
+            background-color: #e9ecef;
+            padding: 8px 12px;
+            border-radius: 4px;
+        }
+
+        .pilihan-ganda {
+            display: flex;
+            flex-direction: row;
+            gap: 20px;
+            padding-left: 10px;
+        }
+
+        .pilihan-ganda label {
+            display: flex;
+            align-items: center;
+            cursor: pointer;
+            font-size: 16px;
+            color: #333;
+            font-weight: 500;
+        }
+
+        .pilihan-ganda input[type="checkbox"] {
+            margin-right: 8px;
+            cursor: pointer;
+            width: 18px;
+            height: 18px;
+        }
+
+        .pesan-contoh {
+            margin-top: 10px;
+            padding-left: 10px;
+            font-weight: bold;
+            font-size: 14px;
+            min-height: 20px;
+        }
+
+        .tombol {
+            padding: 11px 30px;
+            font-size: 16px;
+            font-weight: bold;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            color: #fff;
+        }
+
+        .tombol-utama { background-color: #3498db; }
+        .tombol-utama:hover { background-color: #2980b9; }
+
+        /* ============ GARIS TIMER (ANIMASI SISA WAKTU) ============ */
+        .timer-bar {
+            position: fixed;
+            top: 12px;
+            right: 12px;
+            background-color: #111;
+            border: 2px solid #444;
+            border-radius: 8px;
+            padding: 10px 16px;
+            box-shadow: 0 0 12px rgba(57,255,20,0.45);
+            display: none;
+            z-index: 900;
+            width: 220px;
+        }
+
+        .timer-bar .label {
+            display: block;
+            font-size: 11px;
+            letter-spacing: 3px;
+            color: #999;
+            text-align: center;
+            margin-bottom: 8px;
+        }
+
+        .timer-track {
+            width: 100%;
+            height: 10px;
+            background-color: #333;
+            border-radius: 5px;
+            overflow: hidden;
+        }
+
+        .timer-fill {
+            width: 100%;
+            height: 100%;
+            background-color: #39ff14;
+            box-shadow: 0 0 8px rgba(57,255,20,0.8);
+            border-radius: 5px;
+            transition: width 0.15s linear;
+        }
+
+        /* Garis berubah merah saat waktu hampir habis */
+        .timer-fill.merah {
+            background-color: #ff3131;
+            box-shadow: 0 0 8px rgba(255,49,49,0.8);
+        }
+
+        /* ============ TULISAN PERINGATAN DI BAGIAN BAWAH ============ */
+        .peringatan-bawah {
+            position: fixed;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: #e74c3c;
+            color: #fff;
+            font-weight: bold;
+            font-size: 14px;
+            text-align: center;
+            padding: 12px 16px;
+            display: none;
+            z-index: 950;
+            letter-spacing: 0.5px;
+            box-shadow: 0 -3px 10px rgba(0,0,0,0.3);
+        }
+
+        .popup h2.merah {
+            color: #e74c3c;
+        }
+
+        /* ============ POP UP (OVERLAY) ============ */
+        .overlay {
+            position: fixed;
+            inset: 0;
+            background-color: rgba(0,0,0,0.6);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+        }
+
+        .popup {
+            background-color: #fff;
+            padding: 30px 40px;
+            border-radius: 10px;
+            text-align: center;
+            max-width: 420px;
+            width: 90%;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.4);
+        }
+
+        .popup h2 {
+            margin: 0 0 10px 0;
+            font-size: 20px;
+            color: #2c3e50;
+            line-height: 1.4;
+        }
+
+        .popup p {
+            margin: 0;
+            color: #666;
+            font-size: 15px;
+            line-height: 1.5;
+        }
+
+        @media (max-width: 768px) {
+            .sesi {
+                flex-direction: column;
+            }
+            .pilihan-ganda {
+                flex-wrap: wrap;
+            }
+            .timer-bar {
+                width: 150px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- ============ GARIS TIMER (muncul setelah contoh benar & MULAI ditekan) ============ -->
+    <div class="timer-bar" id="timerBar">
+        <span class="label">SISA WAKTU</span>
+        <div class="timer-track">
+            <div class="timer-fill" id="timerFill"></div>
+        </div>
+    </div>
+
+    <!-- ============ TULISAN PERINGATAN MENJELANG WAKTU HABIS (10 DETIK) ============ -->
+    <div class="peringatan-bawah" id="peringatanBawah">
+        SIAP-SIAP MENUJU TES BERIKUTNYA : JANGAN MENUTUP HALAMAN ATAU MENEKAN
+        TOMBOL APAPUN - TES AKAN SEGERA DITUTUP.
+    </div>
+
+    <div class="wrap">
+
+        <div class="header">
+            <h1>CFIT Subtes Seri B</h1>
+            <div class="info-contoh">
+                <span class="badge">INSTRUKSI BAGIAN KEDUA</span><br>
+                Pilihlah 2 gambar yang sama - sebangun - sepola. <strong>JADI Pilih 2 ya - jawabannya ada 2</strong><br>
+                Kerjakan <strong>CONTOH (Contoh 1 dan Contoh 2)</strong> terlebih dahulu. 
+            </div>
+        </div>
+
+        <!-- ================= CONTOH: 7.png (DINILAI LANGSUNG) ================= -->
+        <div class="sesi">
+            <div class="kolom-kiri">
+                <img src="7.png" alt="Contoh soal Seri B">
+            </div>
+            <div class="kolom-kanan">
+
+               
+
+                <!-- Contoh 1 -->
+                <div class="grup-jawaban" id="grupContoh1">
+                    <div class="judul-soal">Contoh 1:</div>
+                    <div class="pilihan-ganda">
+                        <label><input type="checkbox" name="contoh1" value="a"> a</label>
+                        <label><input type="checkbox" name="contoh1" value="b"> b</label>
+                        <label><input type="checkbox" name="contoh1" value="c"> c</label>
+                        <label><input type="checkbox" name="contoh1" value="d"> d</label>
+                        <label><input type="checkbox" name="contoh1" value="e"> e</label>
+                        <label><input type="checkbox" name="contoh1" value="f"> f</label>
+                    </div>
+                    <div class="pesan-contoh" id="pesanContoh1"></div>
+                </div>
+
+                <!-- Contoh 2 -->
+                <div class="grup-jawaban" id="grupContoh2">
+                    <div class="judul-soal">Contoh 2:</div>
+                    <div class="pilihan-ganda">
+                        <label><input type="checkbox" name="contoh2" value="a"> a</label>
+                        <label><input type="checkbox" name="contoh2" value="b"> b</label>
+                        <label><input type="checkbox" name="contoh2" value="c"> c</label>
+                        <label><input type="checkbox" name="contoh2" value="d"> d</label>
+                        <label><input type="checkbox" name="contoh2" value="e"> e</label>
+                        <label><input type="checkbox" name="contoh2" value="f"> f</label>
+                    </div>
+                    <div class="pesan-contoh" id="pesanContoh2"></div>
+                </div>
+
+            </div>
+        </div>
+
+        <!-- ================= BAGIAN SOAL (SEMBUNYI SAMPAI KEDUA CONTOH BENAR) ================= -->
+        <div id="bagianSoal" style="display: none;">
+
+            <!-- 8.png: SOAL 1-6 -->
+            <div class="sesi">
+                <div class="kolom-kiri">
+                    <img src="8.png" alt="Soal 1 sampai 6">
+                </div>
+                <div class="kolom-kanan" id="container-soal-1-6">
+                    <!-- Template akan diisi oleh JavaScript -->
+                </div>
+            </div>
+
+            <!-- 9.png: SOAL 7-10 -->
+            <div class="sesi">
+                <div class="kolom-kiri">
+                    <img src="9.png" alt="Soal 7 sampai 10">
+                </div>
+                <div class="kolom-kanan" id="container-soal-7-10">
+                </div>
+            </div>
+
+            <!-- 10.png: SOAL 11-14 -->
+            <div class="sesi">
+                <div class="kolom-kiri">
+                    <img src="10.png" alt="Soal 11 sampai 14">
+                </div>
+                <div class="kolom-kanan" id="container-soal-11-14">
+                </div>
+            </div>
+
+        </div>
+        <!-- /bagianSoal -->
+
+    </div>
+
+    <!-- ============ POP UP: MULAI BAGIAN KEDUA ============ -->
+    <div class="overlay" id="overlayMulai">
+        <div class="popup">
+            <h2>KERJAKAN BAGIAN KEDUA<br>MULAI</h2>
+            <p>Kerjakan Sekarang <strong>Sekarang</strong>. Timer akan berjalan
+            setelah Anda menekan tombol di bawah.</p>
+            <button type="button" class="tombol tombol-utama" id="btnMulai">MULAI</button>
+        </div>
+    </div>
+
+    <!-- ============ POP UP: PERIKSA LAGI (SEMUA NOMOR SUDAH TERISI) ============ -->
+    <div class="overlay" id="overlayPeriksa">
+        <div class="popup">
+            <h2 class="merah">PERIKSA LAGI !<br>WAKTU MASIH TERSEDIA.</h2>
+            <p>Mohon diperiksa kembali - waktu masih ada.
+            Gunakan sisa waktu sebaik mungkin untuk memeriksa jawaban Anda.</p>
+            <button type="button" class="tombol tombol-utama" id="btnPeriksa">PERIKSA JAWABAN</button>
+        </div>
+    </div>
+
+    <script>
+        const TOTAL_SOAL = 14;
+        const DURASI_MS = 4 * 60 * 1000; // 4 menit
+
+        // Pembuatan checkbox otomatis (Soal Utama)
+        function generateSoalHTML(start, end, containerId) {
+            const container = document.getElementById(containerId);
+            for (let i = start; i <= end; i++) {
+                container.innerHTML += `
+                    <div class="grup-jawaban" id="grup${i}">
+                        <div class="judul-soal">Jawaban Nomor ${i}:</div>
+                        <div class="pilihan-ganda">
+                            <label><input type="checkbox" name="jawaban${i}" value="a"> a</label>
+                            <label><input type="checkbox" name="jawaban${i}" value="b"> b</label>
+                            <label><input type="checkbox" name="jawaban${i}" value="c"> c</label>
+                            <label><input type="checkbox" name="jawaban${i}" value="d"> d</label>
+                            <label><input type="checkbox" name="jawaban${i}" value="e"> e</label>
+                            <label><input type="checkbox" name="jawaban${i}" value="f"> f</label>
+                        </div>
+                    </div>
+                `;
+            }
+        }
+
+        // Memanggil fungsi untuk memunculkan soal 1-14
+        generateSoalHTML(1, 6, "container-soal-1-6");
+        generateSoalHTML(7, 10, "container-soal-7-10");
+        generateSoalHTML(11, 14, "container-soal-11-14");
+
+        // ============================================================
+        // KUNCI JAWABAN (Contoh & Soal Utama)
+        // ============================================================
+        const KUNCI_CONTOH = {
+            "contoh1": ["b", "d"],
+            "contoh2": ["c", "e"]
+        };
+
+        const KUNCI_JAWABAN = {
+            1: ["b", "e"],
+            2: ["a", "e"],
+            3: ["a", "d"],
+            4: ["c", "e"],
+            5: ["b", "e"],
+            6: ["a", "d"],
+            7: ["b", "e"],
+            8: ["b", "e"],
+            9: ["a", "d"],
+            10: ["b", "d"],
+            11: ["a", "e"],
+            12: ["c", "d"],
+            13: ["b", "c"],
+            14: ["a", "b"]
+        };
+
+        const bagianSoal      = document.getElementById("bagianSoal");
+        const timerBar        = document.getElementById("timerBar");
+        const timerFill       = document.getElementById("timerFill");
+        const overlayMulai    = document.getElementById("overlayMulai");
+        const overlayPeriksa  = document.getElementById("overlayPeriksa");
+        const peringatanBawah = document.getElementById("peringatanBawah");
+
+        let sisaWaktu = DURASI_MS;
+        let timerId = null;
+        let tesDimulai = false;
+        let popPeriksaSudah = false;
+
+        // ------------------------------------------------------------
+        // Koreksi langsung jawaban contoh setiap kali dipilih.
+        // Selama masih ada yang salah / belum lengkap (2 pilihan),
+        // bagian soal (8.png - 10.png) tetap disembunyikan.
+        // ------------------------------------------------------------
+        function cekContoh() {
+            if (tesDimulai) return;
+
+            let semuaBenar = true;
+
+            ["contoh1", "contoh2"].forEach(function (nama) {
+                const grup = document.getElementById("grup" + nama.charAt(0).toUpperCase() + nama.slice(1));
+                const pesan = document.getElementById("pesan" + nama.charAt(0).toUpperCase() + nama.slice(1));
+                const terpilih = document.querySelectorAll('input[name="' + nama + '"]:checked');
+
+                grup.classList.remove("benar", "salah", "kosong");
+                pesan.textContent = "";
+
+                if (terpilih.length < 2) {
+                    // Belum lengkap: tandai kosong, soal belum boleh terbuka
+                    semuaBenar = false;
+                    grup.classList.add("kosong");
+                } else {
+                    const kunci = KUNCI_CONTOH[nama];
+                    const jawab1 = terpilih[0].value;
+                    const jawab2 = terpilih[1].value;
+
+                    if (kunci.includes(jawab1) && kunci.includes(jawab2)) {
+                        grup.classList.add("benar");
+                        pesan.textContent = "Jawaban Benar! 🎉";
+                        pesan.style.color = "#27ae60";
+                    } else {
+                        semuaBenar = false;
+                        grup.classList.add("salah");
+                        pesan.textContent = "Jawaban Salah, coba pilih kombinasi lain.";
+                        pesan.style.color = "#c0392b";
+                    }
+                }
+            });
+
+            if (semuaBenar) {
+                // Kunci jawaban contoh agar tidak diubah lagi
+                document.querySelectorAll('input[name="contoh1"], input[name="contoh2"]').forEach(function (c) {
+                    c.disabled = true;
+                });
+                // Tampilkan soal 1-14, lalu pop up mulai
+                bagianSoal.style.display = "block";
+                overlayMulai.style.display = "flex";
+            } else {
+                bagianSoal.style.display = "none";
+            }
+        }
+
+        // ------------------------------------------------------------
+        // EVENT LISTENER: Membatasi maks 2 ceklis + koreksi contoh +
+        // cek "semua nomor sudah terisi" untuk pop up PERIKSA LAGI.
+        // ------------------------------------------------------------
+        document.addEventListener("change", function(e) {
+            if (e.target.type !== "checkbox") return;
+
+            const name = e.target.name;
+            const checkedBoxes = document.querySelectorAll(`input[name="${name}"]:checked`);
+
+            // Cegah centang lebih dari 2
+            if (checkedBoxes.length > 2) {
+                e.target.checked = false;
+                alert("Maksimal hanya boleh memilih 2 jawaban!");
+                return;
+            }
+
+            // Khusus contoh: koreksi langsung (buka soal bila semua benar)
+            if (name === "contoh1" || name === "contoh2") {
+                cekContoh();
+                return;
+            }
+
+            // Bila waktu belum habis tetapi SEMUA nomor (1-14) sudah terisi
+            // masing-masing 2 jawaban, keluarkan pop up "PERIKSA LAGI".
+            cekSemuaTerisi();
+        });
+
+        function cekSemuaTerisi() {
+            if (!tesDimulai || popPeriksaSudah) return;
+
+            let lengkap = 0;
+            for (let n = 1; n <= TOTAL_SOAL; n++) {
+                if (document.querySelectorAll(`input[name="jawaban${n}"]:checked`).length === 2) {
+                    lengkap++;
+                }
+            }
+
+            if (lengkap === TOTAL_SOAL) {
+                popPeriksaSudah = true;
+                overlayPeriksa.style.display = "flex";
+            }
+        }
+
+        // Tutup pop up periksa agar peserta bisa memeriksa lagi
+        document.getElementById("btnPeriksa").addEventListener("click", function () {
+            overlayPeriksa.style.display = "none";
+        });
+
+        // ------------------------------------------------------------
+        // Pop up ditutup -> garis timer mulai menyusut (4 menit)
+        // ------------------------------------------------------------
+        document.getElementById("btnMulai").addEventListener("click", function () {
+            overlayMulai.style.display = "none";
+            tesDimulai = true;
+            timerBar.style.display = "block";
+            renderTimer();
+            timerId = setInterval(tikTimer, 100);
+        });
+
+        function tikTimer() {
+            sisaWaktu -= 100;
+            if (sisaWaktu <= 0) {
+                sisaWaktu = 0;
+                renderTimer();
+                selesaikanTes();
+                return;
+            }
+            renderTimer();
+        }
+
+        // Animasi garis: panjang garis menyusut sesuai sisa waktu
+        // (tanpa menampilkan angka menit/detik)
+        function renderTimer() {
+            const persen = (sisaWaktu / DURASI_MS) * 100;
+            timerFill.style.width = persen + "%";
+
+            // 10 detik jelang habis: garis merah + peringatan siap-siap
+            if (sisaWaktu <= 10 * 1000) {
+                timerFill.classList.add("merah");
+                peringatanBawah.style.display = "block";
+            }
+        }
+
+        // ------------------------------------------------------------
+        // Waktu habis: koreksi jawaban, simpan sementara skor
+        // (akan dijumlahkan pada akhir tes), lalu LANGSUNG pindah
+        // ke cfit-3.html.
+        // ------------------------------------------------------------
+        function selesaikanTes() {
+            clearInterval(timerId);
+
+            let benar = 0;
+
+            for (let n = 1; n <= TOTAL_SOAL; n++) {
+                const terpilih = document.querySelectorAll(`input[name="jawaban${n}"]:checked`);
+
+                if (terpilih.length === 2) {
+                    const kunci = KUNCI_JAWABAN[n];
+                    if (kunci.includes(terpilih[0].value) && kunci.includes(terpilih[1].value)) {
+                        benar++;
+                    }
+                }
+
+                document.querySelectorAll(`input[name="jawaban${n}"]`).forEach(function (c) {
+                    c.disabled = true;
+                });
+            }
+
+            // Simpan sementara untuk dijumlahkan pada akhir tes
+            localStorage.setItem("cfit_seriB_skor", String(benar));
+
+            // Langsung menuju bagian 3
+            window.location.href = "cfit-3.html";
+        }
+    </script>
+
+</body>
+</html>
